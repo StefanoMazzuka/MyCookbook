@@ -14,15 +14,15 @@ public class Recipe {
     private String name;
     private String preparation;
     
-    public Recipe(String name, String preparation) {
-        this.name = name;
-        this.preparation = preparation;
-    }
-    
+    public void setName(String name) {
+		this.name = name;
+	}   
     public String getName() {
         return name;
     }
-
+	public void setPreparation(String preparation) {
+		this.preparation = preparation;
+	}
     public String getPreparation() {
         return preparation;
     }  

@@ -46,14 +46,16 @@ public class Connections {
         }
     }
     
-    public ArrayList<Recipe> getRecipe() {
+    public ArrayList<Recipe> getRecipes() {
     ArrayList<Recipe> recipeList = new ArrayList<>();
         try {
             st = connec.prepareStatement("SELECT * FROM recipes");
             list = st.executeQuery();
             Recipe recipe;
             while (list.next()) {
-                recipe = new Recipe(list.getString("name"), list.getString("preparation"));
+                recipe = new Recipe();
+                recipe.setName(list.getString("name"));
+                recipe.setPreparation(list.getString("preparation"));
                 recipeList.add(recipe);
             }
         } catch (SQLException e) {
