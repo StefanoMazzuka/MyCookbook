@@ -5,32 +5,35 @@
  */
 package Objects;
 
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *
  * @author McPuto
  */
 public class Connections {
-    private final String url = "C:\\SQLite\\MyCookbookDB.sqlite";
+    private final String url = System.getProperty("user.dir") + File.separator + "SQLite" + File.separator + "MyCookbookDB.sqlite";
     private Connection connec;
     private PreparedStatement st;
     private ResultSet list;
     
     public void connect() {
+    	String x = System.getProperty("user.dir");
+    	System.out.println(x);
+//        try {
+//            Class.forName("org.sqlite.JDBC");
+//        } catch (ClassNotFoundException e) {
+//            JOptionPane.showMessageDialog(null, e.getMessage());
+//        }
         try {
-            Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-        }
-        try {
+        	Class.forName("org.sqlite.JDBC");
             connec = DriverManager.getConnection("jdbc:sqlite:" + url);
             if (connec != null) System.out.println("Connection Success");
-        } catch (SQLException e) {
+        } catch (Exception  e) {
             Logger.getLogger(Connections.class.getName()).log(Level.SEVERE, null, e);
         }
     }
