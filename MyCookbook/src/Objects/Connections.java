@@ -18,7 +18,10 @@ import javax.swing.JOptionPane;
  * @author McPuto
  */
 public class Connections {
-    private final String url = System.getProperty("user.dir") + File.separator + "SQLite" + File.separator + "MyCookbookDB.sqlite";
+    private final String url = 
+    		System.getProperty("user.dir") + 
+    		File.separator + "SQLite" + 
+    		File.separator + "MyCookbookDB.sqlite";
     private Connection connec;
     private PreparedStatement st;
     private ResultSet list;
@@ -46,6 +49,21 @@ public class Connections {
         } catch (SQLException e) {
             Logger.getLogger(Connections.class.getName()).log(Level.SEVERE, null, e);
         }
+    }
+    
+    public boolean recipeExists(String recipeName) {
+        boolean exists = false;
+    	try {
+            st = connec.prepareStatement("SELECT * FROM Recipes Where name = '" +
+            		recipeName + "'");
+            list = st.executeQuery();
+            if (list.next())
+            	exists = true;
+            
+        } catch (SQLException e) {
+             Logger.getLogger(Connections.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return exists;
     }
     
     public ArrayList<Recipe> getRecipes() {
@@ -77,11 +95,11 @@ public class Connections {
     
     public void insertIngredient(Ingredient ingredient) {
         try {
-            st = connec.prepareStatement("INSERT INTO mycookbook VALUES('" 
+            st = connec.prepareStatement("INSERT INTO Ingredients VALUES('" 
                     + ingredient.getName() + "', '" 
                     + ingredient.getQuantity() + "', '" 
                     + ingredient.getUnits()+ "', '" 
-                    + ingredient.getRecipeId()+ "')");
+                    + ingredient.getRecipeName()+ "')");
             st.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(Connections.class.getName()).log(Level.SEVERE, null, e);
@@ -95,7 +113,7 @@ public class Connections {
             list = st.executeQuery();
             Ingredient ingredient;
             while (list.next()) {
-                ingredient = new Ingredient(list.getString("name"), list.getInt("quantity"), list.getInt("units"), list.getInt("recipeId"));
+                ingredient = new Ingredient(list.getString("name"), list.getInt("quantity"), list.getString("units"), list.getString("recipeName"));
                 ingredientList.add(ingredient);
             }
         } catch (SQLException e) {

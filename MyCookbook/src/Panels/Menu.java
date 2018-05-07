@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.nio.channels.AcceptPendingException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,6 +16,11 @@ import Objects.Connections;
 
 public class Menu extends JFrame {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public Menu() {
 		JLabel menu = new JLabel("MENU");
 		JButton myRecipes = new JButton("My Recipes");
@@ -59,7 +63,7 @@ public class Menu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				NewRecipe nR = new NewRecipe();
+				NewRecipe nR = new NewRecipe(conn);
 				nR.setVisible(true);
 				setVisible(false);
 			}

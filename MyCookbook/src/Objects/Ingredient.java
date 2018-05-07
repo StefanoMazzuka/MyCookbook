@@ -12,31 +12,50 @@ package Objects;
 public class Ingredient {
 
     private String name;
-    private int quantity;
-    private int units;
-    private int recipeId;
+    private double quantity;
+    private String units;
+    private String recipeName;
     
-    Ingredient(String name, int quantity, int units, int recipeId) {
+    public Ingredient(String name, double quantity, String units, String recipeName) {
         this.name = name;
         this.quantity = quantity;
         this.units = units;
-        this.recipeId = recipeId;
+        this.recipeName = recipeName;
     }
     
     public String getName() {
         return name;
     }
-
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
-
-    public int getUnits() {
+    public String getUnits() {
         return units;
     }
-    
-    public int getRecipeId() {
-        return recipeId;
+    public String getRecipeName() {
+        return recipeName;
     }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Ingredient other = (Ingredient) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
 }
-

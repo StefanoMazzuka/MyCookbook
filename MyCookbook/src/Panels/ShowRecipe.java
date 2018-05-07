@@ -18,7 +18,10 @@ import Objects.Connections;
 import Objects.Recipe;
 
 public class ShowRecipe extends JFrame{
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public ShowRecipe(Connections conn) {			
 
 		JLabel title = new JLabel("My Recipes");
