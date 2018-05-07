@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author McPuto
@@ -22,15 +24,12 @@ public class Connections {
     private ResultSet list;
     
     public void connect() {
-    	String x = System.getProperty("user.dir");
-    	System.out.println(x);
-//        try {
-//            Class.forName("org.sqlite.JDBC");
-//        } catch (ClassNotFoundException e) {
-//            JOptionPane.showMessageDialog(null, e.getMessage());
-//        }
         try {
-        	Class.forName("org.sqlite.JDBC");
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        try {
             connec = DriverManager.getConnection("jdbc:sqlite:" + url);
             if (connec != null) System.out.println("Connection Success");
         } catch (Exception  e) {
