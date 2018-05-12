@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -43,6 +45,15 @@ public class ShowRecipe extends JFrame{
 		add(title, BorderLayout.NORTH);
 		add(scrollPane, BorderLayout.CENTER);
 		add(back, BorderLayout.SOUTH);
+		addWindowListener(new WindowAdapter()
+		{
+		    @Override
+		    public void windowClosing(WindowEvent e)
+		    {
+		        super.windowClosing(e);
+		        conn.close();
+		    }
+		});
 
 		//pack();
 
@@ -51,7 +62,7 @@ public class ShowRecipe extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				Menu m = new Menu();
+				Menu m = new Menu(conn);
 				m.setVisible(true);
 				setVisible(false);
 			}

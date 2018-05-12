@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -48,6 +50,15 @@ public class NewRecipe extends JFrame {
 		setLocationRelativeTo(null); 
 		setTitle("My Cookbook"); 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		addWindowListener(new WindowAdapter()
+		{
+		    @Override
+		    public void windowClosing(WindowEvent e)
+		    {
+		        super.windowClosing(e);
+		        conn.close();
+		    }
+		});
 
 		JPanel dataPanel = new JPanel(new GridLayout(1, 2));
 		dataPanel.add(recipeNameLabel);
@@ -176,7 +187,7 @@ public class NewRecipe extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (state == 0) {
-					Menu m = new Menu();
+					Menu m = new Menu(conn);
 					m.setVisible(true);
 					setVisible(false);
 				}
@@ -261,12 +272,11 @@ public class NewRecipe extends JFrame {
 					}
 					recipe.setPreparation(prepaText.getText());
 					conn.insertRecipe(recipe);
-					JOptionPane.showMessageDialog(null, recipe.getName() + " save.");
+					JOptionPane.showMessageDialog(null, recipe.getName() + " saved.");
 					state = 0;
-					Menu m = new Menu();
+					Menu m = new Menu(conn);
 					m.setVisible(true);
 					setVisible(false);
-					conn.cerrar();
 				}
 			}
 		});

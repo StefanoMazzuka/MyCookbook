@@ -20,7 +20,7 @@ import javax.swing.JOptionPane;
 public class Connections {
     private final String url = 
     		System.getProperty("user.dir") + 
-    		File.separator + "SQLite" + 
+    		File.separator + "SQLiteDatabase" + 
     		File.separator + "MyCookbookDB.sqlite";
     private Connection connec;
     private PreparedStatement st;
@@ -34,8 +34,9 @@ public class Connections {
         }
         try {
             connec = DriverManager.getConnection("jdbc:sqlite:" + url);
-            if (connec != null) System.out.println("Connection Success");
+            if (connec != null) JOptionPane.showMessageDialog(null, "Connection Success.");
         } catch (Exception  e) {
+        	JOptionPane.showMessageDialog(null, e);
             Logger.getLogger(Connections.class.getName()).log(Level.SEVERE, null, e);
         }
     }
@@ -47,6 +48,7 @@ public class Connections {
                     + recipe.getPreparation() + "')");
             st.executeUpdate();
         } catch (SQLException e) {
+        	JOptionPane.showMessageDialog(null, e);
             Logger.getLogger(Connections.class.getName()).log(Level.SEVERE, null, e);
         }
     }
@@ -61,6 +63,7 @@ public class Connections {
             	exists = true;
             
         } catch (SQLException e) {
+        	JOptionPane.showMessageDialog(null, e);
              Logger.getLogger(Connections.class.getName()).log(Level.SEVERE, null, e);
         }
         return exists;
@@ -79,6 +82,7 @@ public class Connections {
                 recipeList.add(recipe);
             }
         } catch (SQLException e) {
+        	JOptionPane.showMessageDialog(null, e);
              Logger.getLogger(Connections.class.getName()).log(Level.SEVERE, null, e);
         }
         return recipeList;
@@ -89,7 +93,7 @@ public class Connections {
             st = connec.prepareStatement("DETELE FROM recipes WHERE idRecipe = " + idRecipe);
             st.executeUpdate();
         } catch (Exception e) {
-            System.out.println(e);
+        	JOptionPane.showMessageDialog(null, e);
         }
     }
     
@@ -102,6 +106,7 @@ public class Connections {
                     + ingredient.getRecipeName()+ "')");
             st.executeUpdate();
         } catch (SQLException e) {
+        	JOptionPane.showMessageDialog(null, e);
             Logger.getLogger(Connections.class.getName()).log(Level.SEVERE, null, e);
         }
     }
@@ -117,6 +122,7 @@ public class Connections {
                 ingredientList.add(ingredient);
             }
         } catch (SQLException e) {
+        	JOptionPane.showMessageDialog(null, e);
              Logger.getLogger(Connections.class.getName()).log(Level.SEVERE, null, e);
         }
         return ingredientList;
@@ -127,14 +133,16 @@ public class Connections {
             st = connec.prepareStatement("DETELE FROM ingredient WHERE idIngredient = " + idIngredient);
             st.executeUpdate();
         } catch (Exception e) {
-            System.out.println(e);
+        	JOptionPane.showMessageDialog(null, e);
         }
     }
     
-    public void cerrar() {
+    public void close() {
         try {
             connec.close();
+            JOptionPane.showMessageDialog(null, "Disconnection Success.");
         } catch (SQLException e) {
+        	JOptionPane.showMessageDialog(null, e);
             Logger.getLogger(Connections.class.getName()).log(Level.SEVERE, null, e);
         }
     }

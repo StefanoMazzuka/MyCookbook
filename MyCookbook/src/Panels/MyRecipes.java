@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -34,6 +36,15 @@ public class MyRecipes extends JFrame {
 		setLocationRelativeTo(null); 
 		setTitle("My Cookbook"); 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		addWindowListener(new WindowAdapter()
+		{
+		    @Override
+		    public void windowClosing(WindowEvent e)
+		    {
+		        super.windowClosing(e);
+		        conn.close();
+		    }
+		});
 
 		/*Cargar recetas*/
 		JPanel recipeList = loadRecipes(conn);
@@ -52,7 +63,7 @@ public class MyRecipes extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				Menu m = new Menu();
+				Menu m = new Menu(conn);
 				m.setVisible(true);
 				setVisible(false);
 			}
