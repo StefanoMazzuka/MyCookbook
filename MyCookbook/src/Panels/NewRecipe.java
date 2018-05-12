@@ -112,7 +112,7 @@ public class NewRecipe extends JFrame {
 		quantityText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char input = e.getKeyChar();
-				if ((input < '0' || input > '9') && input != '\b') {
+				if (input != '.' && ((input < '0' || input > '9') && input != '\b')) {
 					e.consume();
 				}
 			}
@@ -138,7 +138,7 @@ public class NewRecipe extends JFrame {
 		preparationPanel.add(prepaLabel);
 		preparationPanel.add(prepaText);
 
-		/*Panel Principal*/
+		/*Principal Panel*/
 		setLayout(new BorderLayout());
 		add(title, BorderLayout.NORTH);
 		add(dataPanel, BorderLayout.CENTER);
@@ -154,10 +154,8 @@ public class NewRecipe extends JFrame {
 				if (state == 0) {
 					if (recipeNameText.getText().equals(""))
 						JOptionPane.showMessageDialog(null, "Please enter a name for the recipe.");
-					else if (conn.recipeExists(recipeNameText.getText())) {
-						JOptionPane.showMessageDialog(null, "The recipe alrady exists.");
-					}
-					else {
+					
+					else if (!conn.recipeExists(recipeNameText.getText())) {
 						recipe.setName(recipeNameText.getText());
 						dataPanel.setVisible(false);
 						title.setText(recipeNameText.getText());
@@ -166,6 +164,7 @@ public class NewRecipe extends JFrame {
 						state = 1;
 					}	
 				}
+				
 				else if (state == 1) {
 					if (ingredientsList.isEmpty())
 						JOptionPane.showMessageDialog(null, "Please enter some ingredients.");
@@ -191,6 +190,7 @@ public class NewRecipe extends JFrame {
 					m.setVisible(true);
 					setVisible(false);
 				}
+				
 				else if (state == 1) {
 					ingredientsPanel.setVisible(false);
 					add(dataPanel, BorderLayout.CENTER);
@@ -207,7 +207,11 @@ public class NewRecipe extends JFrame {
 				// TODO Auto-generated method stub
 				if (ingNameText.getText().equals("") || quantityText.getText().equals(""))
 					JOptionPane.showMessageDialog(null, "Please enter a name and a quantity for the ingredient.");
-
+							
+				else if (!correctQuantity(quantityText.getText())) {
+					JOptionPane.showMessageDialog(null, "ERROR 003: Invalid quantity.");
+				}
+				
 				else {
 					Ingredient ing = new Ingredient(ingNameText.getText(), 
 							Double.parseDouble((quantityText.getText())), 
@@ -217,7 +221,7 @@ public class NewRecipe extends JFrame {
 						ingredientsList.add(ing);
 						String ingredients = "";
 						for (int i = 0; i < ingredientsList.size(); i++) {
-							ingredients += ((i + 1) + ". " + ingredientsList.get(i).getName() + " " +
+							ingredients += ((i + 1) + ") " + ingredientsList.get(i).getName() + " " +
 									ingredientsList.get(i).getQuantity() + " " +
 									ingredientsList.get(i).getUnits());
 							ingredients += '\n';
@@ -280,5 +284,20 @@ public class NewRecipe extends JFrame {
 				}
 			}
 		});
+	}
+	
+	private boolean correctQuantity(String quantity) {
+		char characters[] = quantity.toCharArray();
+		int count = 1;
+		if (characters[0] == '.')
+			return false;
+		for (int i = 0; i < characters.length; i++) {
+			if (characters[i] == '.')
+				count--;
+			if (count == -1)
+				return false;
+		}
+		
+		return true;
 	}
 }

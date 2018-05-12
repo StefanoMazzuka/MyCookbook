@@ -2,80 +2,67 @@ package Panels;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JTextArea;
 
 import Objects.Connections;
-import Objects.Recipe;
+import Objects.Ingredient;
 
 public class ShowRecipe extends JFrame{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public ShowRecipe(Connections conn) {			
+	public ShowRecipe(Connections conn, String recipeName) {			
 
-		JLabel title = new JLabel("My Recipes");
-		JButton back = new JButton("Back");
+		JLabel title = new JLabel(recipeName);
 
 		title.setHorizontalAlignment(JTextField.CENTER);
 
 		setSize(new Dimension(400, 400));
 		setLocationRelativeTo(null); 
 		setTitle("My Cookbook"); 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		/*Cargar recetas*/
-		JPanel recipeList = loadRecipes(conn);
-		JScrollPane scrollPane = new JScrollPane(recipeList);
+		/*Load ingredients*/
+		JPanel ingredientsList = loadIngredients(conn, recipeName);
+		JScrollPane scrollPane = new JScrollPane(ingredientsList,
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+	            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
 		/*Panel Principal*/
 		setLayout(new BorderLayout());
 		add(title, BorderLayout.NORTH);
 		add(scrollPane, BorderLayout.CENTER);
-		add(back, BorderLayout.SOUTH);
-		addWindowListener(new WindowAdapter()
-		{
-		    @Override
-		    public void windowClosing(WindowEvent e)
-		    {
-		        super.windowClosing(e);
-		        conn.close();
-		    }
-		});
 
-		//pack();
-
-		back.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				Menu m = new Menu(conn);
-				m.setVisible(true);
-				setVisible(false);
-			}
-		});
+		pack();
 	}
-	public JPanel loadRecipes(Connections conn) {
-		ArrayList<Recipe> recipeList = conn.getRecipes();
-		JPanel recipeListPanel = new JPanel(new GridLayout(recipeList.size(), 1));
-		JButton b;
-		for (int i = 0; i < recipeList.size(); i++) {
-			b = new JButton(recipeList.get(i).getName());
-			recipeListPanel.add(b);
+	public JPanel loadIngredients(Connections conn, String recipeName) {	
+		ArrayList<Ingredient> ingredientsList = conn.getIngredient(recipeName);
+		String ingredients = "";
+		for (int i = 0; i < ingredientsList.size(); i++) {
+			ingredients += ((i + 1) + ") " + ingredientsList.get(i).getName() + " " +
+					ingredientsList.get(i).getQuantity() + " " +
+					ingredientsList.get(i).getUnits());
+			ingredients += '\n';
 		}
-		return recipeListPanel;
+		
+		ingredients += '\n' + "PREPARATION: " + '\n' + conn.getPreparation(recipeName);
+		
+		JTextArea ingredientsTextArea = new JTextArea();
+		ingredientsTextArea.setEditable(false);
+		ingredientsTextArea.setText(ingredients);
+		ingredientsTextArea.setLineWrap(true);
+		ingredientsTextArea.setWrapStyleWord(true);
+		
+		JPanel ingredientsListPanel = new JPanel(new BorderLayout());
+		ingredientsListPanel.add(ingredientsTextArea, BorderLayout.CENTER);
+		
+		return ingredientsListPanel;
 	}
 }

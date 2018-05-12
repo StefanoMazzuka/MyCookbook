@@ -25,11 +25,14 @@ public class MyRecipes extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String recipeName;
+	private ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
+	
 	public MyRecipes(Connections conn) {
 
 		JLabel title = new JLabel("My Recipes");
 		JButton back = new JButton("Back");
-
+		
 		title.setHorizontalAlignment(JTextField.CENTER);
 
 		setSize(new Dimension(400, 400));
@@ -47,8 +50,43 @@ public class MyRecipes extends JFrame {
 		});
 
 		/*Cargar recetas*/
-		JPanel recipeList = loadRecipes(conn);
-        JScrollPane scrollPane = new JScrollPane(recipeList);
+		recipeList = conn.getRecipes();
+		JPanel recipeListPanel = new JPanel(new GridLayout(recipeList.size(), 2));
+		JButton recipe;
+		JButton delRecipe;
+		for (int i = 0; i < recipeList.size(); i++) {
+			recipeName = recipeList.get(i).getName();
+			recipe = new JButton(recipeName);
+			delRecipe = new JButton("Delete");
+			delRecipe.setName(recipeName);
+			recipeListPanel.add(recipe);
+			recipeListPanel.add(delRecipe);
+			
+			recipe.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					JButton b = (JButton)e.getSource();
+					ShowRecipe sr = new ShowRecipe(conn, b.getText());
+					sr.setVisible(true);
+				}
+			});
+			
+			delRecipe.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					JButton b = (JButton)e.getSource();
+					conn.deleteRecipe(b.getName());
+					recipeListPanel.revalidate();
+					recipeListPanel.repaint();
+				}
+			});
+		}
+
+        JScrollPane scrollPane = new JScrollPane(recipeListPanel);
 		
 		/*Panel Principal*/
 		setLayout(new BorderLayout());
@@ -70,12 +108,40 @@ public class MyRecipes extends JFrame {
 		});
 	}
 	public JPanel loadRecipes(Connections conn) {
-		ArrayList<Recipe> recipeList = conn.getRecipes();
-		JPanel recipeListPanel = new JPanel(new GridLayout(recipeList.size(), 1));
-		JButton b;
+		recipeList = conn.getRecipes();
+		JPanel recipeListPanel = new JPanel(new GridLayout(recipeList.size(), 2));
+		JButton recipe;
+		JButton delRecipe;
 		for (int i = 0; i < recipeList.size(); i++) {
-			b = new JButton(recipeList.get(i).getName());
-			recipeListPanel.add(b);
+			recipeName = recipeList.get(i).getName();
+			recipe = new JButton(recipeName);
+			delRecipe = new JButton("Delete");
+			delRecipe.setName(recipeName);
+			recipeListPanel.add(recipe);
+			recipeListPanel.add(delRecipe);
+			
+			recipe.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					JButton b = (JButton)e.getSource();
+					ShowRecipe sr = new ShowRecipe(conn, b.getText());
+					sr.setVisible(true);
+				}
+			});
+			
+			delRecipe.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					JButton b = (JButton)e.getSource();
+					conn.deleteRecipe(b.getName());
+					recipeListPanel.revalidate();
+					recipeListPanel.repaint();
+				}
+			});
 		}
 		return recipeListPanel;
 	}
