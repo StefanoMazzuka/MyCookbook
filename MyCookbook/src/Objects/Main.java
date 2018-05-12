@@ -7,8 +7,9 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Connections conn = new Connections();
-		conn.connect();
-		Menu menu = new Menu(conn);
-		menu.setVisible(true);
+		if(conn.connect()) {
+			Menu menu = new Menu(conn);
+			menu.setVisible(true);
+		}
 	}
 }

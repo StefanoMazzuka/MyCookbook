@@ -19,14 +19,13 @@ import javax.swing.JOptionPane;
  */
 public class Connections {
     private final String url = 
-    		System.getProperty("user.dir") + 
-    		File.separator + "SQLiteDatabase" + 
+    		System.getProperty("user.dir") +
     		File.separator + "MyCookbookDB.sqlite";
     private Connection connec;
     private PreparedStatement st;
     private ResultSet list;
     
-    public void connect() {
+    public boolean connect() {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
@@ -35,9 +34,11 @@ public class Connections {
         try {
             connec = DriverManager.getConnection("jdbc:sqlite:" + url);
             if (connec != null) JOptionPane.showMessageDialog(null, "Connection Success.");
+            return true;
         } catch (Exception  e) {
-        	JOptionPane.showMessageDialog(null, e);
+        	JOptionPane.showMessageDialog(null, "ERROR 001: Connection Fails.");
             Logger.getLogger(Connections.class.getName()).log(Level.SEVERE, null, e);
+            return false;
         }
     }
     
