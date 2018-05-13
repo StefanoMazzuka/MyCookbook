@@ -27,7 +27,6 @@ public class Menu extends JFrame {
 		JLabel menu = new JLabel("MENU");
 		JButton myRecipes = new JButton("My Recipes");
 		JButton newRecipe = new JButton("New Recipe");
-		JButton modifyRecipe = new JButton("Modify Recipes");
 
 		menu.setHorizontalAlignment(JTextField.CENTER);
 
@@ -45,10 +44,9 @@ public class Menu extends JFrame {
 			}
 		});
 
-		JPanel menuPanel = new JPanel(new GridLayout(3, 1));
+		JPanel menuPanel = new JPanel(new GridLayout(2, 1));
 		menuPanel.add(myRecipes);
 		menuPanel.add(newRecipe);
-		menuPanel.add(modifyRecipe);
 
 		setLayout(new BorderLayout());
 		add(menu, BorderLayout.NORTH);

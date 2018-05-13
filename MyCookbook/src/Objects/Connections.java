@@ -99,6 +99,12 @@ public class Connections {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e);
 		}
+		try {
+			st = connec.prepareStatement("DELETE FROM Ingredients WHERE recipeName = '" + recipeName + "'");
+			st.executeUpdate();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e);
+		}
 	}
 
 	public void insertIngredient(Ingredient ingredient) {

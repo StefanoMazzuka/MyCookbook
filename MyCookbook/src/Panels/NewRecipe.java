@@ -37,7 +37,7 @@ public class NewRecipe extends JFrame {
 
 	public NewRecipe(Connections conn) {
 		JLabel title = new JLabel("New Recipe");
-		JLabel recipeNameLabel = new JLabel("Enter recipe name:");
+		JLabel recipeNameLabel = new JLabel("Recipe name:");
 		JTextField recipeNameText = new JTextField("", 5);
 		JButton next = new JButton("Next");
 		JButton back = new JButton("Back");
