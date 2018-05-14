@@ -15,14 +15,17 @@ public class Ingredient {
     private double quantity;
     private String units;
     private String recipeName;
-    
-    public Ingredient(String name, double quantity, String units, String recipeName) {
+
+	public Ingredient(String name, double quantity, String units, String recipeName) {
         this.name = name;
         this.quantity = quantity;
         this.units = units;
         this.recipeName = recipeName;
     }
-    
+     
+    public void setRecipeName(String recipeName) {
+		this.recipeName = recipeName;
+	}
     public String getName() {
         return name;
     }

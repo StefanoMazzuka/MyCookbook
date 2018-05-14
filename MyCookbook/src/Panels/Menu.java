@@ -24,12 +24,14 @@ public class Menu extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	public Menu(Connections conn) {
+		
 		JLabel menu = new JLabel("MENU");
 		JButton myRecipes = new JButton("My Recipes");
 		JButton newRecipe = new JButton("New Recipe");
 
 		menu.setHorizontalAlignment(JTextField.CENTER);
 
+		setResizable(false);
 		setSize(new Dimension(400, 400));
 		setLocationRelativeTo(null); 
 		setTitle("My Cookbook"); 

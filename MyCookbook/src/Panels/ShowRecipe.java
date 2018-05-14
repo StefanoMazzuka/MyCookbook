@@ -23,12 +23,14 @@ public class ShowRecipe extends JFrame{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public ShowRecipe(Connections conn, String recipeName) {			
-
+	
+	public ShowRecipe(Connections conn, String recipeName) {
+		
 		JLabel title = new JLabel(recipeName);
 
 		title.setHorizontalAlignment(JTextField.CENTER);
 
+		setResizable(false);
 		setSize(new Dimension(400, 400));
 		setLocationRelativeTo(null); 
 		setTitle("My Cookbook"); 
@@ -52,8 +54,6 @@ public class ShowRecipe extends JFrame{
 		add(title, BorderLayout.NORTH);
 		add(scrollPane, BorderLayout.CENTER);
 		add(buttonsPanel, BorderLayout.SOUTH);
-
-		pack();
 		
 		back.addActionListener(new ActionListener() {
 			
@@ -71,15 +71,17 @@ public class ShowRecipe extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				EditRecipe er = new EditRecipe(conn);
+				EditRecipe er = new EditRecipe(conn, recipeName);
 				er.setVisible(true);
-				setVisible(false);
+				dispose();
 			}
 		});
 	}
+	
+	
 	public JPanel loadIngredients(Connections conn, String recipeName) {	
-		ArrayList<Ingredient> ingredientsList = conn.getIngredient(recipeName);
-		String ingredients = "";
+		ArrayList<Ingredient> ingredientsList = conn.getIngredients(recipeName);
+		String ingredients = "INGREDIENTS:" + '\n';
 		for (int i = 0; i < ingredientsList.size(); i++) {
 			ingredients += ((i + 1) + ") " + ingredientsList.get(i).getName() + " " +
 					ingredientsList.get(i).getQuantity() + " " +
@@ -87,7 +89,7 @@ public class ShowRecipe extends JFrame{
 			ingredients += '\n';
 		}
 		
-		ingredients += '\n' + "PREPARATION: " + '\n' + conn.getPreparation(recipeName);
+		ingredients += '\n' + "PREPARATION:" + '\n' + conn.getPreparation(recipeName);
 		
 		JTextArea ingredientsTextArea = new JTextArea();
 		ingredientsTextArea.setEditable(false);

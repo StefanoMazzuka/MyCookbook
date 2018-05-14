@@ -36,6 +36,8 @@ public class MyRecipes extends JFrame {
 		JButton back = new JButton("Back");
 		
 		title.setHorizontalAlignment(JTextField.CENTER);
+		
+		setResizable(false);
 		setSize(new Dimension(400, 400));
 		setLocationRelativeTo(null); 
 		setTitle("My Cookbook"); 
@@ -69,7 +71,7 @@ public class MyRecipes extends JFrame {
 				// TODO Auto-generated method stub
 				Menu m = new Menu(conn);
 				m.setVisible(true);
-				setVisible(false);
+				dispose();
 			}
 		});
 	}
@@ -116,7 +118,7 @@ public class MyRecipes extends JFrame {
 					// TODO Auto-generated method stub
 					JButton b = (JButton)e.getSource();
 					conn.deleteRecipe(b.getName());
-					updateRecipeListPanel(b);		
+					updateRecipeListPanel(b);	
 				}
 			});
 			recipeAndDelButtons.put(delRecipeButton, recipeButton);

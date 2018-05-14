@@ -76,7 +76,7 @@ public class Connections {
 	public ArrayList<Recipe> getRecipes() {
 		ArrayList<Recipe> recipeList = new ArrayList<>();
 		try {
-			st = connec.prepareStatement("SELECT * FROM recipes");
+			st = connec.prepareStatement("SELECT * FROM Recipes");
 			list = st.executeQuery();
 			Recipe recipe;
 			while (list.next()) {
@@ -92,6 +92,22 @@ public class Connections {
 		return recipeList;
 	}
 
+	public Recipe getRecipe(String recipeName) {
+		Recipe recipe = new Recipe();
+		try {
+			st = connec.prepareStatement("SELECT * FROM Recipes WHERE name = '" + recipeName + "'");
+			list = st.executeQuery();
+			while (list.next()) {
+				recipe.setName(list.getString("name"));
+				recipe.setPreparation(list.getString("preparation"));
+			}
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connections.class.getName()).log(Level.SEVERE, null, e);
+		}
+		return recipe;
+	}
+	
 	public void deleteRecipe(String recipeName) {
 		try {
 			st = connec.prepareStatement("DELETE FROM Recipes WHERE name = '" + recipeName + "'");
@@ -121,7 +137,7 @@ public class Connections {
 		}
 	}
 
-	public ArrayList<Ingredient> getIngredient(String recipeName) {
+	public ArrayList<Ingredient> getIngredients(String recipeName) {
 		ArrayList<Ingredient> ingredientList = new ArrayList<>();
 		try {
 			st = connec.prepareStatement("SELECT * FROM Ingredients WHERE recipeName = '" + recipeName + "'");
