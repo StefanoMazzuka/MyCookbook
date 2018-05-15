@@ -1,8 +1,6 @@
 package Panels;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -12,7 +10,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import Objects.Connections;
 
@@ -24,13 +21,7 @@ public class Menu extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	public Menu(Connections conn) {
-		
-		JLabel menu = new JLabel("MENU");
-		JButton myRecipes = new JButton("My Recipes");
-		JButton newRecipe = new JButton("New Recipe");
-
-		menu.setHorizontalAlignment(JTextField.CENTER);
-
+	
 		setResizable(false);
 		setSize(new Dimension(400, 400));
 		setLocationRelativeTo(null); 
@@ -46,15 +37,22 @@ public class Menu extends JFrame {
 			}
 		});
 
-		JPanel menuPanel = new JPanel(new GridLayout(2, 1));
+		
+		JLabel menu = new JLabel("MENU");	
+		JButton myRecipes = new JButton("My Recipes");
+		JButton newRecipe = new JButton("New Recipe");
+		
+		menu.setBounds(183, 100, 34, 30);
+		myRecipes.setBounds(145, 140, 110, 30);
+		newRecipe.setBounds(145, 171, 110, 30);
+		
+		JPanel menuPanel = new JPanel();
+		menuPanel.setLayout(null);
+		menuPanel.add(menu);
 		menuPanel.add(myRecipes);
 		menuPanel.add(newRecipe);
-
-		setLayout(new BorderLayout());
-		add(menu, BorderLayout.NORTH);
-		add(menuPanel, BorderLayout.CENTER);
-
-		pack();
+		
+		add(menuPanel);
 
 		myRecipes.addActionListener(new ActionListener() {
 
