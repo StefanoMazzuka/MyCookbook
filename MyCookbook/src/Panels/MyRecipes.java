@@ -12,6 +12,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -195,14 +196,16 @@ public class MyRecipes extends JFrame {
 		showRecipe.setBackground(Color.BLUE);
 		
 		JPanel recipesPanel = new JPanel();
-		recipesPanel.setLayout(null);
+		recipesPanel.setLayout(new BoxLayout(recipesPanel, BoxLayout.Y_AXIS));
 		recipesPanel.setBackground(Color.WHITE);
 		
 		JButton b;
 		for (int i = 0; i < recipeButtons.size(); i++) {
 			b = new JButton();
 			b = recipeButtons.get(i);
-			b.setBounds(10, (i * 30) + 10, 190, 30);
+			b.setOpaque(false);
+	        b.setContentAreaFilled(false);
+	        b.setBorderPainted(false);
 			
 			recipesPanel.add(b);
 		}
