@@ -34,7 +34,6 @@ public class Connections {
 		try {
 			connec = DriverManager.getConnection("jdbc:sqlite:" + url);
 			if (connec != null) {
-				JOptionPane.showMessageDialog(null, "Connection Success.");
 				return true;
 			}
 		} catch (Exception  e) {
@@ -179,7 +178,6 @@ public class Connections {
 	public void close() {
 		try {
 			connec.close();
-			JOptionPane.showMessageDialog(null, "Disconnection Success.");
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, e);
 			Logger.getLogger(Connections.class.getName()).log(Level.SEVERE, null, e);
