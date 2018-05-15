@@ -5,16 +5,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,9 +29,13 @@ public class MyRecipes extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private HashMap<JButton, JButton> recipeAndDelButtons;
 	private ArrayList<JButton> recipeButtons;
+	private JPanel showRecipe;
+	JPanel showRecipeWithEdit;
 	private JPanel recipeListPanel;
+	private JPanel centralPanel;
+	private GridBagConstraints gbc1;
+	private GridBagConstraints gbc2;
 	JScrollPane scrollPane;
 
 	public MyRecipes(Connections conn) {
@@ -67,24 +68,41 @@ public class MyRecipes extends JFrame {
 		/*
 		 * Central Panel.
 		 */
-		 n
-		JPanel centralPanel = new JPanel(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
+		recipeListPanel = createRecipeListPanel(conn);
+		
+		showRecipe = new JPanel();
+		showRecipe.setBackground(Color.WHITE);
+		
+		showRecipeWithEdit = new JPanel(new BorderLayout());
+		
+		centralPanel = new JPanel(new GridBagLayout());
+		
+		gbc1 = new GridBagConstraints();
+		gbc1.gridx = 0;
+		gbc1.gridy = 0;
+		gbc1.weightx = 2;
+		gbc1.weighty = 1;
+		gbc1.fill = GridBagConstraints.BOTH;
+		centralPanel.add(recipeListPanel, gbc1);
+		
+		gbc2 = new GridBagConstraints();
+		gbc2.gridx = 1;
+		gbc2.gridy = 0;
+		gbc2.weightx = 4;
+		gbc2.weighty = 1;
+		gbc2.fill = GridBagConstraints.BOTH;
+		centralPanel.add(showRecipeWithEdit, gbc2);
 		
 		/*
 		 * Principal Panel
 		 */
 		JPanel conteiner = new JPanel(new BorderLayout());
 		conteiner.add(titlePanel, BorderLayout.NORTH);
-
-		/*Cargar recetas*/
-		loadRecipes(conn);
-		createScrollPane(conteiner);
-		createShowRecipePanel(conteiner);
-		
+		conteiner.add(centralPanel, BorderLayout.CENTER);
 
 		add(conteiner);
 	}
+	
 	private void loadRecipes(Connections conn) {
 		recipeButtons = new ArrayList<JButton>();
 		ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
@@ -92,6 +110,7 @@ public class MyRecipes extends JFrame {
 		JButton recipeButton;
 		for (int i = 0; i < recipeList.size(); i++) {
 			recipeButton = new JButton(recipeList.get(i).getName());
+			recipeButton.setName(recipeList.get(i).getName());
 			
 			recipeButton.addActionListener(new ActionListener() {
 
@@ -99,67 +118,97 @@ public class MyRecipes extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
 					JButton b = (JButton)e.getSource();
-					ShowRecipe sr = new ShowRecipe(conn, b.getText());
-					sr.setVisible(true);
-					dispose();
+					String recipeName = b.getText();
+					ShowRecipe sr = new ShowRecipe(conn, recipeName);
+					showRecipeWithEdit.removeAll();
+					showRecipe = new JPanel();
+					showRecipe = sr.getShowRecipe();
+					showRecipe.setVisible(true);
+					
+					JButton edit = new JButton("Edit");
+					
+					edit.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							// TODO Auto-generated method stub
+							EditRecipe er = new EditRecipe(conn, recipeName);
+							er.setVisible(true);
+							dispose();
+						}
+					});		
+					
+					JButton delete = new JButton("Delete");
+					
+					delete.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							// TODO Auto-generated method stub
+							
+							for (int j = 0; j < recipeButtons.size(); j++) {
+								if (recipeButtons.get(j).getName().equals(recipeName))
+									recipeButtons.remove(j);
+							}
+							
+							conn.deleteRecipe(recipeName);	
+							
+							showRecipeWithEdit.removeAll();
+							showRecipeWithEdit.revalidate();
+							showRecipeWithEdit.repaint();
+							recipeListPanel.removeAll();
+							recipeListPanel = createRecipeListPanel(conn);	
+							centralPanel.removeAll();
+							centralPanel.add(recipeListPanel, gbc1);
+							centralPanel.add(showRecipeWithEdit, gbc2);
+							centralPanel.revalidate();
+							centralPanel.repaint();
+						}
+					});
+					
+					showRecipeWithEdit.add(showRecipe, BorderLayout.CENTER);
+					
+					JPanel buttons = new JPanel(new GridLayout(1, 2));
+					buttons.add(delete);
+					buttons.add(edit);
+					
+					showRecipeWithEdit.add(buttons, BorderLayout.SOUTH);
+					showRecipeWithEdit.revalidate();
+					showRecipeWithEdit.repaint();
+					recipeListPanel.removeAll();
+					recipeListPanel = createRecipeListPanel(conn);	
+					centralPanel.removeAll();
+					centralPanel.add(recipeListPanel, gbc1);
+					centralPanel.add(showRecipeWithEdit, gbc2);
+					centralPanel.revalidate();
+					centralPanel.repaint();
 				}
 			});
 			this.recipeButtons.add(recipeButton);
 		}
 	}
-	private void createScrollPane(JPanel conteiner) {
+	private JPanel createRecipeListPanel(Connections conn) {
 		
-//		GridBagConstraints gbc = new GridBagConstraints();
-//		recipeListPanel = new JPanel(new GridBagLayout());
-//		recipeListPanel.setBackground(Color.WHITE);
-//		JButton b;
-//		int i = 0;
-//		for (HashMap.Entry<JButton, JButton> entry : recipeAndDelButtons.entrySet()) {
-//			b = entry.getValue();
-//			gbc.gridx = 0;
-//			gbc.gridy = i;
-//			gbc.weightx = 10;
-//			gbc.fill = GridBagConstraints.HORIZONTAL;
-//			gbc.insets = new Insets(0, 10, 0, 1);
-//
-//			recipeListPanel.add(b, gbc);
-//
-//			b = entry.getKey();
-//			gbc.gridx = 4;
-//			gbc.gridy = i;
-//			gbc.weightx = 0.5;
-//			gbc.fill = GridBagConstraints.HORIZONTAL;
-//			gbc.insets = new Insets(0, 0, 0, 10);
-//
-//			recipeListPanel.add(b, gbc);
-//			i++;
-//		}
-//		recipeListPanel.revalidate();
-//		recipeListPanel.repaint();
-//		scrollPane = new JScrollPane(recipeListPanel);
-//		scrollPane.revalidate();
-//		scrollPane.repaint();
-//		conteiner.add(scrollPane, BorderLayout.CENTER);
-				
-		recipeListPanel = new JPanel();
-		recipeListPanel.setLayout(null);
-		recipeListPanel.setBackground(Color.WHITE);
+		loadRecipes(conn);
+		
+		showRecipe = new JPanel();
+		showRecipe.setBackground(Color.BLUE);
+		
+		JPanel recipesPanel = new JPanel();
+		recipesPanel.setLayout(null);
+		recipesPanel.setBackground(Color.WHITE);
 		
 		JButton b;
 		for (int i = 0; i < recipeButtons.size(); i++) {
 			b = new JButton();
 			b = recipeButtons.get(i);
-			b.setBounds(10, (i * 30) + 10, 180, 30);
+			b.setBounds(10, (i * 30) + 10, 190, 30);
 			
-			recipeListPanel.add(b);
+			recipesPanel.add(b);
 		}
 		
-		recipeListPanel.revalidate();
-		recipeListPanel.repaint();
-		scrollPane = new JScrollPane(recipeListPanel);
-		scrollPane.revalidate();
-		scrollPane.repaint();
-		conteiner.add(scrollPane, BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane(recipesPanel);
+		scrollPane.setPreferredSize(new Dimension(200, 400));
 		
 		JButton newRecipeButton = new JButton("New Recipe");
 		
@@ -168,15 +217,17 @@ public class MyRecipes extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				
+				NewRecipe nR = new NewRecipe(conn);
+				nR.setVisible(true);
+				setVisible(false);
+				dispose();
 			}
 		});
-	}
-	public void updateRecipeListPanel(JButton deleteKey) {
-		recipeListPanel.remove(deleteKey);
-		recipeListPanel.remove(recipeAndDelButtons.get(deleteKey));	
-		recipeAndDelButtons.remove(deleteKey);
-		recipeListPanel.revalidate();
-		recipeListPanel.repaint();	
+		
+		JPanel recipeListPanel = new JPanel(new BorderLayout());
+		recipeListPanel.add(scrollPane, BorderLayout.CENTER);
+		recipeListPanel.add(newRecipeButton, BorderLayout.SOUTH);
+		
+		return recipeListPanel;
 	}
 }

@@ -2,13 +2,8 @@ package Panels;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -18,66 +13,34 @@ import javax.swing.JTextArea;
 import Objects.Connections;
 import Objects.Ingredient;
 
-public class ShowRecipe extends JFrame{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class ShowRecipe {
+
+	JPanel showRecipe;
 	
 	public ShowRecipe(Connections conn, String recipeName) {
+		
+		this.showRecipe = new JPanel();
+		this.showRecipe.setPreferredSize(new Dimension(400, 400));
 		
 		JLabel title = new JLabel(recipeName);
 
 		title.setHorizontalAlignment(JTextField.CENTER);
 
-		setResizable(false);
-		setSize(new Dimension(400, 400));
-		setLocationRelativeTo(null); 
-		setTitle("My Cookbook"); 
-
-		/*Load ingredients*/
+		/*
+		 * Load ingredients
+		 */
 		JPanel ingredientsList = loadIngredients(conn, recipeName);
 		JScrollPane scrollPane = new JScrollPane(ingredientsList,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-	            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-		/*Buttons panel*/
-		JPanel buttonsPanel = new JPanel(new GridLayout(1, 2));
-		JButton back = new JButton("Back");
-		JButton edit = new JButton("Edit");
-		buttonsPanel.add(back);
-		buttonsPanel.add(edit);
+	            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);	
+		/*
+		 * Panel Principal
+		 */
+		showRecipe.setLayout(new BorderLayout());
 		
-		/*Panel Principal*/
-		setLayout(new BorderLayout());
-		
-		add(title, BorderLayout.NORTH);
-		add(scrollPane, BorderLayout.CENTER);
-		add(buttonsPanel, BorderLayout.SOUTH);
-		
-		back.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				MyRecipes mr = new MyRecipes(conn);
-				mr.setVisible(true);
-				dispose();
-			}
-		});
-		
-		edit.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				EditRecipe er = new EditRecipe(conn, recipeName);
-				er.setVisible(true);
-				dispose();
-			}
-		});
+		showRecipe.add(title, BorderLayout.NORTH);
+		showRecipe.add(scrollPane, BorderLayout.CENTER);
 	}
-	
 	
 	public JPanel loadIngredients(Connections conn, String recipeName) {	
 		ArrayList<Ingredient> ingredientsList = conn.getIngredients(recipeName);
@@ -101,5 +64,8 @@ public class ShowRecipe extends JFrame{
 		ingredientsListPanel.add(ingredientsTextArea, BorderLayout.CENTER);
 		
 		return ingredientsListPanel;
+	}
+	public JPanel getShowRecipe() {
+		return this.showRecipe;
 	}
 }
