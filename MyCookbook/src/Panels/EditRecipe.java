@@ -163,9 +163,8 @@ public class EditRecipe extends JFrame {
 		return ingredientsListPanel;
 	}
 	private JPanel dataIngPanel(JPanel ingredientListPanel) {
-
-		Icon add = new ImageIcon("+.png");
-		Icon del = new ImageIcon("x.png");
+		Icon add = new ImageIcon(EditRecipe.class.getResource("/Resources/+.png"));
+		Icon del = new ImageIcon(EditRecipe.class.getResource("/Resources/x.png"));
 
 		JLabel quantityLabel = new JLabel("Quantity");
 		JLabel unitsLabel = new JLabel("Units");
@@ -175,11 +174,8 @@ public class EditRecipe extends JFrame {
 		JTextField quantityText = new JTextField("", 5);
 		JTextField delIngText = new JTextField("", 5);
 		JComboBox<String> unitsCB = new JComboBox<String>(units);
-		JButton addIng = new JButton("", add);
-		JButton delIng = new JButton();
-
-		addIng.setIcon(add);
-		delIng.setIcon(del);
+		JButton addIng = new JButton(add);
+		JButton delIng = new JButton(del);
 
 		quantityLabel.setBounds(185, 0, 65, 30);
 		unitsLabel.setBounds(255, 0, 65, 30);
