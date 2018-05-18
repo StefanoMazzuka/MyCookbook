@@ -37,7 +37,13 @@ public class NewRecipe extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private Recipe recipe = new Recipe();
+	JPanel titlePanel;
 	private JPanel ingredientsListPanel;
+	private JPanel ingredientsPanel;
+	private JScrollPane scrollIngPanel;
+	private JPanel dataIngPanel;
+	JPanel buttonsPanel;
+	private JPanel conteiner;
 	private ArrayList<Ingredient> ingredientsList = new ArrayList<Ingredient>();
 	private String[] units = { "Kg", "g", "L", "ml", "Cup", "Table spoon", "Tea spoon", "Unit", "Pieces"};
 	private int state;
@@ -66,36 +72,18 @@ public class NewRecipe extends JFrame {
 		 */
 		JLabel title = new JLabel("New Recipe");
 		title.setHorizontalAlignment(JTextField.CENTER);
-		JPanel titlePanel = new JPanel();
+		titlePanel = new JPanel();
 		titlePanel.setLayout(new BorderLayout());
 		titlePanel.setPreferredSize(new Dimension(400, 60));
 		titlePanel.add(title);
 
-		/*
-		 * Data panel is the center panel.
-		 */
 		JPanel recipeNamePanel = recipeNamePanel();
 
 		/*
 		 * Ingredients list on scroll panel.
 		 */	
-		//JPanel ingredientsListPanel = ingredientListPanel();
 		ingredientsListPanel = new JPanel();
-		printIngredientListPanel();
-		JScrollPane scrollIngPanel = new JScrollPane(ingredientsListPanel);
-		scrollIngPanel.setPreferredSize(new Dimension(400, 165));
-
-		/*
-		 * Buttons for add and delete ingredients from the list.
-		 */
-		JPanel dataIngPanel = dataIngPanel();
-
-		/*
-		 * Ingredients Panel.
-		 */
-		JPanel ingredientsPanel = new JPanel();
-		ingredientsPanel.add(scrollIngPanel);
-		ingredientsPanel.add(dataIngPanel);
+		dataIngPanel = dataIngPanel();
 
 		/*
 		 * Preparation Panel.
@@ -112,15 +100,15 @@ public class NewRecipe extends JFrame {
 		preparationPanel.add(scrollPrepPanel, BorderLayout.CENTER);	
 
 		/*Principal Panel*/
-		JPanel conteiner = new JPanel(new BorderLayout());
+		conteiner = new JPanel(new BorderLayout());
 		conteiner.add(titlePanel, BorderLayout.NORTH);
 		conteiner.add(recipeNamePanel, BorderLayout.CENTER);
 
 		/*
 		 * Buttons panel is where you find the buttons.
 		 */
-		JPanel buttonsPanel = buttonsPanel(conn, titlePanel, recipeNamePanel, ingredientsPanel, preparationPanel, 
-				preparationTextPanel, conteiner);
+		buttonsPanel = buttonsPanel(conn, titlePanel, recipeNamePanel,
+				preparationPanel, preparationTextPanel);
 
 		conteiner.add(buttonsPanel, BorderLayout.SOUTH);
 
@@ -141,24 +129,25 @@ public class NewRecipe extends JFrame {
 
 		return recipeNamePanel;
 	}
-	private void printIngredientListPanel() {
+	private void printIngredientListPanel() {	
 		ingredientsListPanel.removeAll();
-		ingredientsListPanel = new JPanel(new BoxLayout(ingredientsListPanel, BoxLayout.Y_AXIS));
+		ingredientsListPanel = new JPanel();
+		ingredientsListPanel.setLayout(new BoxLayout(ingredientsListPanel, BoxLayout.Y_AXIS));
 		ingredientsListPanel.setBackground(Color.WHITE);
-		
+
 		Icon del = new ImageIcon(NewRecipe.class.getResource("/Resources/x.png"));		
 		JButton b;
 		for (int i = 0; i < ingredientsList.size(); i++) {
 			Ingredient ing = ingredientsList.get(i);
-			b = new JButton(i + ") " + ing.getName() + " " + ing.getQuantity() + " " + ing.getUnits() + " ");
+			b = new JButton((i + 1) + ") " + ing.getName() + " " + ing.getQuantity() + " " + ing.getUnits() + " ");
 			b.setIcon(del);
-		    b.setVerticalTextPosition(SwingConstants.CENTER);
-		    b.setHorizontalTextPosition(SwingConstants.LEFT);
-		    b.setOpaque(false);
-		    b.setContentAreaFilled(false);
-		    b.setBorderPainted(false);
-		    
-		    b.addActionListener(new ActionListener() {
+			b.setVerticalTextPosition(SwingConstants.CENTER);
+			b.setHorizontalTextPosition(SwingConstants.LEFT);
+			b.setOpaque(false);
+			b.setContentAreaFilled(false);
+			b.setBorderPainted(false);
+
+			b.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -167,12 +156,21 @@ public class NewRecipe extends JFrame {
 					printIngredientListPanel();
 				}
 			});
-		    
-		    ingredientsListPanel.add(b);
+
+			ingredientsListPanel.add(b);
 		}
-		
-		ingredientsListPanel.revalidate();
-		ingredientsListPanel.repaint();
+
+		scrollIngPanel = new JScrollPane(ingredientsListPanel);
+		scrollIngPanel.setPreferredSize(new Dimension(400, 165));
+		ingredientsPanel = new JPanel(new BorderLayout());
+		ingredientsPanel.add(scrollIngPanel, BorderLayout.CENTER);
+		ingredientsPanel.add(dataIngPanel, BorderLayout.SOUTH);
+		conteiner.remove(1);
+		conteiner.add(titlePanel, BorderLayout.NORTH);
+		conteiner.add(ingredientsPanel, BorderLayout.CENTER);
+		conteiner.add(buttonsPanel, BorderLayout.SOUTH);
+		conteiner.revalidate();
+		conteiner.repaint();
 	}
 	private JPanel dataIngPanel() {
 		Icon add = new ImageIcon(NewRecipe.class.getResource("/Resources/+.png"));
@@ -180,10 +178,8 @@ public class NewRecipe extends JFrame {
 		JLabel quantityLabel = new JLabel("Quantity");
 		JLabel unitsLabel = new JLabel("Units");
 		JLabel ingredientLabel = new JLabel("Ingredient:");
-		JLabel delIngredientLabel = new JLabel("Delete ingredient nº:");
 		JTextField ingNameText = new JTextField("", 5);
 		JTextField quantityText = new JTextField("", 5);
-		JTextField delIngText = new JTextField("", 5);
 		JComboBox<String> unitsCB = new JComboBox<String>(units);
 		JButton addIng = new JButton(add);
 
@@ -196,12 +192,9 @@ public class NewRecipe extends JFrame {
 		unitsCB.setBounds(235, 30, 100, 30);
 		addIng.setBounds(340, 30, 30, 30);
 
-		delIngredientLabel.setBounds(170, 65, 120, 30);
-		delIngText.setBounds(295, 65, 40, 30);
-
 		JPanel dataIngPanel = new JPanel();
 		dataIngPanel.setLayout(null);
-		dataIngPanel.setPreferredSize(new Dimension(400, 105));
+		dataIngPanel.setPreferredSize(new Dimension(400, 75));
 		dataIngPanel.add(quantityLabel);
 		dataIngPanel.add(unitsLabel);
 		dataIngPanel.add(ingredientLabel);
@@ -209,8 +202,6 @@ public class NewRecipe extends JFrame {
 		dataIngPanel.add(quantityText);
 		dataIngPanel.add(unitsCB);
 		dataIngPanel.add(addIng);
-		dataIngPanel.add(delIngredientLabel);
-		dataIngPanel.add(delIngText);
 
 		quantityText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
@@ -220,15 +211,7 @@ public class NewRecipe extends JFrame {
 				}
 			}
 		});
-		delIngText.addKeyListener(new KeyAdapter() {
-			public void keyTyped(KeyEvent e) {
-				char input = e.getKeyChar();
-				if ((input < '0' || input > '9') && input != '\b') {
-					e.consume();
-				}
-			}
-		});
-	
+
 		// Add button
 		addIng.addActionListener(new ActionListener() {
 			@Override
@@ -241,6 +224,11 @@ public class NewRecipe extends JFrame {
 					JOptionPane.showMessageDialog(null, "ERROR 003: Invalid quantity.");
 				}
 
+				else if (9999 < Integer.parseInt(quantityText.getText()) || 
+						0 > Integer.parseInt(quantityText.getText())) {
+					JOptionPane.showMessageDialog(null, "ERROR 004: Invalid quantity.");
+				}
+				
 				else {
 					Ingredient ing = new Ingredient(ingNameText.getText(), 
 							Double.parseDouble((quantityText.getText())), 
@@ -255,7 +243,7 @@ public class NewRecipe extends JFrame {
 				}
 			}
 		});
-		
+
 		return dataIngPanel;
 	}
 	private JPanel preparationPanel() {	
@@ -270,8 +258,8 @@ public class NewRecipe extends JFrame {
 
 		return preparationTextPanel;
 	}
-	private JPanel buttonsPanel(Connections conn, JPanel titlePanel, JPanel recipeNamePanel, JPanel ingredientsPanel, 
-			JPanel preparationPanel, JPanel preparationTextPanel, JPanel conteiner) {
+	private JPanel buttonsPanel(Connections conn, JPanel titlePanel, JPanel recipeNamePanel, 
+			JPanel preparationPanel, JPanel preparationTextPanel) {
 		JButton next = new JButton("Next");
 		JButton back = new JButton("Back");
 		JButton save = new JButton("Save");
@@ -295,7 +283,7 @@ public class NewRecipe extends JFrame {
 						recipe.setName(recipeNameText.getText());
 						recipeNamePanel.setVisible(false);
 						title.setText(recipeNameText.getText());
-						conteiner.add(ingredientsPanel, BorderLayout.CENTER);
+						printIngredientListPanel();
 						ingredientsPanel.setVisible(true);
 						state = 1;
 					}

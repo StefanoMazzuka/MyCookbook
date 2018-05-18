@@ -1,9 +1,6 @@
 package Objects;
 
-import java.awt.TextArea;
-
 import Panels.MyRecipes;
-import Panels.Test;
 
 public class Main {
 
@@ -13,8 +10,6 @@ public class Main {
 		if(conn.connect()) {
 			MyRecipes mr = new MyRecipes(conn);
 			mr.setVisible(true);
-//			Test t = new Test();
-//			t.setVisible(true);
 		}
 	}
 }
