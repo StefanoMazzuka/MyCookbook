@@ -36,6 +36,7 @@ public class EditRecipe extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Recipe recipe = new Recipe();
+	private String originalRecipeName;
 	JPanel titlePanel;
 	private JPanel ingredientsListPanel;
 	private JPanel ingredientsPanel;
@@ -50,8 +51,8 @@ public class EditRecipe extends JFrame {
 	public EditRecipe(Connections conn, String recipeName) {
 
 		this.recipe = conn.getRecipe(recipeName);
+		this.originalRecipeName = this.recipe.getName();
 		this.ingredientsList = conn.getIngredients(recipeName);
-		conn.deleteRecipe(recipeName);
 		this.state = 0;
 
 		setResizable(false);
@@ -283,7 +284,9 @@ public class EditRecipe extends JFrame {
 					if (recipeNameText.getText().equals(""))
 						JOptionPane.showMessageDialog(null, "Please enter a name for the recipe.");
 
-					else if (!conn.recipeExists(recipeNameText.getText())) {
+					else if (recipeNameText.getText().equals(originalRecipeName) ||
+							(!recipeNameText.getText().equals(originalRecipeName) && 
+									!conn.recipeExists(recipeNameText.getText())))  {
 						recipe.setName(recipeNameText.getText());
 						for (int i = 0; i < ingredientsList.size(); i++) {
 							ingredientsList.get(i).setRecipeName(recipe.getName());
@@ -338,11 +341,13 @@ public class EditRecipe extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				conn.deleteRecipe(originalRecipeName);
 				JTextArea prepaTextArea = (JTextArea) preparationTextPanel.getComponent(0);
 
 				for (int i = 0; i < ingredientsList.size(); i++) {
 					conn.insertIngredient(ingredientsList.get(i));
 				}
+				
 				recipe.setPreparation(prepaTextArea.getText());
 				conn.insertRecipe(recipe);
 				JOptionPane.showMessageDialog(null, recipe.getName() + " saved.");
